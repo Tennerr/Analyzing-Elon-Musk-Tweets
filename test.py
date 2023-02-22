@@ -7,19 +7,21 @@ import plotly.graph_objects as go
 import pandas as pd
 from PIL import ImageTk, Image
 
-def btn10():
+
+
+def btn10_click():
     global selectedVal
     selectedVal = 10
     clearButtons()
     btn10.configure(bg='gray')
     saveGraph()
-def btn30():
+def btn30_click():
     global selectedVal
     selectedVal = 30
     clearButtons()
     btn30.configure(bg='gray')
     saveGraph()
-def btn50():
+def btn50_click():
     global selectedVal
     selectedVal = 50
     clearButtons()
@@ -29,8 +31,8 @@ def clearButtons():
     btn10.configure(bg='#f0f0f0')
     btn30.configure(bg='#f0f0f0')
     btn50.configure(bg='#f0f0f0')
-def saveGraph():
-    global selectedVal
+def parseWords():
+    global counter
     ignoreWords = ["the", "that", "an", "a", "for", "in", "be", "by", "or", "and", "with"]
     freq = None
     counter = {}
@@ -43,7 +45,10 @@ def saveGraph():
                     if word not in counter:
                         counter[word] = 0
                     counter[word]+=1
-    
+def saveGraph():
+    global selectedVal
+    global counter
+
     res = dict(sorted(counter.items(), key = itemgetter(1), reverse = True)[:selectedVal])
     names = list(res.keys())
     values = list(res.values())
@@ -59,13 +64,14 @@ def saveGraph():
     updateWindow()
     
 def updateWindow():
-    print("HERE")
+    global img
     img = ImageTk.PhotoImage(Image.open("fig.png"))
-    print(img)
-    leftGraph.configure(image=img)
+    leftGraph = tk.Label(window, image=img)
+    leftGraph.place(x=0, y=40)
+    rightCloud = tk.Label(window)
+    rightCloud.place(x=700, y=40)
 
-
-
+parseWords()
 
 window = tk.Tk()
 window.title("Tweets")
@@ -73,22 +79,13 @@ window.geometry("1400x500")
 """
     Buttons
 """
-btn10 = tk.Button(window,width=10,height=2,text="10",command=btn10, bg="gray")
+btn10 = tk.Button(window,width=10,height=2,text="10",command=btn10_click, bg="gray")
 btn10.place(x=0, y=0)
-btn30 = tk.Button(window,width=10,height=2,text="30",command=btn30, bg="#f0f0f0")
+btn30 = tk.Button(window,width=10,height=2,text="30",command=btn30_click, bg="#f0f0f0")
 btn30.place(x=100, y=0)
-btn50 = tk.Button(window,width=10,height=2,text="50",command=btn50, bg="#f0f0f0")
+btn50 = tk.Button(window,width=10,height=2,text="50",command=btn50_click, bg="#f0f0f0")
 btn50.place(x=200, y=0)
-"""
-    Left Graph
-"""
-img = ImageTk.PhotoImage(Image.open("fig.png"))
-leftGraph = tk.Label(window, image=img)
-leftGraph.place(x=0, y=40)
-"""
-    Right Word Cloud
-"""
-rightCloud = tk.Label(window)
-rightCloud.place(x=700, y=40)
+btn10_click()
 
+updateWindow()
 window.mainloop()
