@@ -54,8 +54,8 @@ def saveGraph():
     values = list(res.values())
     
     plt.barh(names, values)
-    plt.title('store inventory')
-    plt.ylabel('product')
+    plt.title('Frequency')
+    plt.ylabel('Words')
     plt.xlabel('quantity')
     plt.gca().invert_yaxis()
     plt.savefig("fig.png")
