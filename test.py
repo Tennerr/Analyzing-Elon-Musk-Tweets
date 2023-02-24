@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import tkinter as tk
 import plotly.graph_objects as go
 import pandas as pd
+from io import BytesIO
+from wordcloud import WordCloud, STOPWORDS
 from PIL import ImageTk, Image
 
 
@@ -53,6 +55,7 @@ def saveGraph():
     names = list(res.keys())
     values = list(res.values())
     
+
     plt.barh(names, values)
     plt.title('Frequency')
     plt.ylabel('Words')
@@ -68,7 +71,13 @@ def updateWindow():
     img = ImageTk.PhotoImage(Image.open("fig.png"))
     leftGraph = tk.Label(window, image=img)
     leftGraph.place(x=0, y=40)
-    rightCloud = tk.Label(window)
+    # Generate a wordcloud
+    stopwords = set(STOPWORDS)
+    words = " ".join([word for word in counter.keys()])
+    wordcloud = WordCloud(stopwords=stopwords, background_color="white", width=700, height=500 ).generate(words)
+    wordcloudImg = ImageTk.PhotoImage(wordcloud.to_image())
+    rightCloud = tk.Label(window, image=wordcloudImg)
+    rightCloud.image = wordcloudImg
     rightCloud.place(x=700, y=40)
 
 parseWords()
